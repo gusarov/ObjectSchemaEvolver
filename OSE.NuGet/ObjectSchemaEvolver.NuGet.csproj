@@ -73,13 +73,13 @@
     <Content Include="NuSpecInc.exe" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MetaCreator\MetaCreator_4.5.csproj">
-      <Project>{eb4308d1-a3a9-409f-8aa7-dac42ddcff23}</Project>
-      <Name>MetaCreator_4.5</Name>
-    </ProjectReference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
+    <ProjectReference Include="..\OSE\ObjectSchemaEvolver.csproj">
+      <Project>{c5f0f375-a6ac-4a8b-badc-133d1a474bff}</Project>
+      <Name>ObjectSchemaEvolver</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
