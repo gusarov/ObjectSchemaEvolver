@@ -60,6 +60,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Case_03.cs" />
     <Compile Include="Case_02.cs" />
     <Compile Include="Case_01.cs" />
     <Compile Include="TestAttacher.cs" />

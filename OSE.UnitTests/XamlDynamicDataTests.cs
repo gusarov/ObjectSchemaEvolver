@@ -40,6 +40,11 @@ namespace ObjectSchemaEvolver.UnitTests
 			return d.StoreBackXml();
 		}
 
+		public T Load2(int x)
+		{
+			return default(T);
+		}
+
 		public T Load(dynamic d)
 		{
 			string back = StoreBack(d);

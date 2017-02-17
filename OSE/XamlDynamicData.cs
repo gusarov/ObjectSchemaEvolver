@@ -287,7 +287,14 @@ namespace ObjectSchemaEvolver
 				}
 				else
 				{
-					_element.SetAttributeValue(binderName, value);
+					if (string.IsNullOrEmpty(binderNamespace))
+					{
+						_element.SetAttributeValue(binderName, value);
+					}
+					else
+					{
+						_element.SetAttributeValue((XNamespace)binderNamespace + binderName, value);
+					}
 				}
 			}
 			return true;
