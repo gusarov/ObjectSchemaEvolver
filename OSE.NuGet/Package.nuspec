@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>OSE</id>
+    <version>1.7.34</version>
+    <title>Object Schema Evolver</title>
+    <authors>Dmitry Gusarov</authors>
+    <owners></owners>
+    <description>
+      Compile-time metaprogramming on C#
+    </description>
+    <releaseNotes></releaseNotes>
+    <summary></summary>
+    <language>en-US</language>
+    <projectUrl>http://code.google.com/p/metacreator/</projectUrl>
+    <iconUrl>http://code.google.com/p/metacreator/logo</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <references></references>
+    <tags>ObjectSchemaEvolver OSE</tags>
+  </metadata>
+  <files>
+    <file src="bin\build\" target="build" />
+    <file src="bin\lib\" target="lib" />
+  </files>
+</package>
