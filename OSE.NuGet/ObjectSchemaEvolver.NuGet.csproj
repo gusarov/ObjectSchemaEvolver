@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -8,9 +8,9 @@
     <ProjectGuid>{0451BAEF-DF2E-4B98-8644-94EE9415E389}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuGet.MetaCreator</RootNamespace>
-    <AssemblyName>NuGet.MetaCreator</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>ObjectSchemaEvolver.NuGet</RootNamespace>
+    <AssemblyName>ObjectSchemaEvolver.NuGet</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -48,10 +48,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\MetaCreator_4.5.targets">
-      <Link>build\MetaCreator_4.5.targets</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="NuGetPackage.ps1" />
     <None Include="NuGetSetup.ps1" />
     <None Include="NuGet.exe" />
@@ -64,19 +60,16 @@
     <None Include="tools\uninstall.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="build\" />
     <Folder Include="content\" />
     <Folder Include="Properties\" />
     <Folder Include="src\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\bin\Release\MetaCreator_4.5.dll">
-      <Link>build\MetaCreator_4.5.dll</Link>
+    <None Include="..\OSE\bin\Release\ObjectSchemaEvolver.dll">
+      <Link>lib\ObjectSchemaEvolver.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\MetaCreator\obj\Release\MetaCreator_4.5.dll">
-      <Link>lib\net40\MetaCreator_4.5.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="NuSpecInc.exe" />
   </ItemGroup>
   <ItemGroup>
@@ -87,11 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="build\MetaCreator.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

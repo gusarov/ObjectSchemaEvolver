@@ -2,24 +2,28 @@
 <package>
   <metadata>
     <id>OSE</id>
-    <version>1.7.34</version>
+    <version>0.2.4</version>
     <title>Object Schema Evolver</title>
     <authors>Dmitry Gusarov</authors>
     <owners></owners>
     <description>
-      Compile-time metaprogramming on C#
+      Allows to create an upgrade scripts for your object storage using DLR (dynamic).
     </description>
     <releaseNotes></releaseNotes>
     <summary></summary>
     <language>en-US</language>
-    <projectUrl>http://code.google.com/p/metacreator/</projectUrl>
-    <iconUrl>http://code.google.com/p/metacreator/logo</iconUrl>
+    <projectUrl>https://github.com/gusarov/ObjectSchemaEvolver</projectUrl>
+    <!--
+    <iconUrl></iconUrl>
+-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <references></references>
     <tags>ObjectSchemaEvolver OSE</tags>
   </metadata>
   <files>
+    <!--
     <file src="bin\build\" target="build" />
+-->
     <file src="bin\lib\" target="lib" />
   </files>
 </package>
