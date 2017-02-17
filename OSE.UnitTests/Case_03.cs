@@ -17,30 +17,6 @@ namespace ObjectSchemaEvolver.UnitTests
 ";
 
 
-		//[TestMethod]
-		//[Ignore]
-		public void Should_prepare_confusing_col_pro()
-		{
-			Assert.Inconclusive(XamlServices.Save(new Case2
-			{
-				Property1 =
-				{
-					new Case2Item
-					{
-						Name = "Peter",
-					},
-					new Case2Item
-					{
-						Name = "Alis",
-					},
-				},
-				Property2 = new Case2Item
-				{
-					Name = "Boris",
-				},
-			}));
-		}
-		
 		[TestMethod]
 		public void Should_convert_to_dic()
 		{
