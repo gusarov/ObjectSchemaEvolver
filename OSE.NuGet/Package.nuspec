@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>OSE</id>
-    <version>0.2.6</version>
+    <version>0.2.7</version>
     <title>Object Schema Evolver</title>
     <authors>Dmitry Gusarov</authors>
     <owners></owners>

@@ -348,6 +348,27 @@ namespace ObjectSchemaEvolver
 			Trace.WriteLine($"{_element.Name.LocalName} First");
 			return Wrap(_element.Nodes().OfType<XElement>().Single());
 		}
+		public string GetName()
+		{
+			Trace.WriteLine($"{_element.Name.LocalName} GetName");
+			return _element.Name.LocalName;
+		}
+		public string GetName(out string ns)
+		{
+			Trace.WriteLine($"{_element.Name.LocalName} GetName");
+			ns = _element.Name.NamespaceName;
+			return _element.Name.LocalName;
+		}
+		public void SetName(string name)
+		{
+			Trace.WriteLine($"{_element.Name.LocalName} SetName {name}");
+			_element.Name = _element.Name.Namespace + name;
+		}
+		public void SetName(string ns, string name)
+		{
+			Trace.WriteLine($"{_element.Name.LocalName} SetName {ns}, {name}");
+			_element.Name = (XNamespace)ns + name;
+		}
 
 		public void Clear()
 		{

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xaml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ObjectSchemaEvolver.UnitTests.Adv;
+using ObjectSchemaEvolver.UnitTests.Deep;
 
 namespace ObjectSchemaEvolver.UnitTests
 {
@@ -18,6 +19,16 @@ namespace ObjectSchemaEvolver.UnitTests
 		public string FirstName { get; set; }
 		public int Height { get; set; }
 	}
+	public class SampleItem2 : SampleItem
+	{
+	}
+	namespace Deep
+	{
+		public class SampleItem3 : SampleItem
+		{
+		}
+	}
+
 	public class SampleRoot : AttachedPropertyStore
 	{
 		[DefaultValue(null)]
@@ -301,7 +312,63 @@ namespace ObjectSchemaEvolver.UnitTests
 			var item = d.Composite.Add("SampleItem");
 			item.FirstName = "Alice";
 			SampleRoot data = Load(d);
-			Assert.AreEqual("Alice", data.Composite.FirstName);
+			AreEqual("Alice", data.Composite.FirstName);
+		}
+
+		[TestMethod]
+		public void Should_45_get_node_name()
+		{
+			var d = Dynamic(@"<SampleRoot Name='abc' xmlns='test'>
+	<SampleRoot.Collection>
+		<SampleItem FirstName='Bob' />
+		<SampleItem2 FirstName='Alice' />
+	</SampleRoot.Collection>
+</SampleRoot>");
+			foreach (var item in d.Collection)
+			{
+				if (item.GetName() == "SampleItem")
+				{
+					item.SetName("SampleItem2");
+				}
+				else if (item.GetName() == "SampleItem2")
+				{
+					item.SetName("SampleItem");
+				}
+			}
+
+			SampleRoot data = Load(d);
+			AreEqual(2, data.Collection.Count);
+			AreEqual("Bob", data.Collection[0].FirstName);
+			IsInstanceOfType(data.Collection[0], typeof(SampleItem2));
+			IsInstanceOfType(data.Collection[1], typeof(SampleItem));
+		}
+
+		[TestMethod]
+		public void Should_45_get_node_name_with_deep_ns()
+		{
+			var d = Dynamic(@"<SampleRoot Name='abc' xmlns='test'>
+	<SampleRoot.Collection>
+		<SampleItem FirstName='Bob' />
+		<SampleItem2 FirstName='Alice' />
+	</SampleRoot.Collection>
+</SampleRoot>");
+			foreach (var item in d.Collection)
+			{
+				if (item.GetName() == "SampleItem")
+				{
+					item.SetName("clr-namespace:ObjectSchemaEvolver.UnitTests.Deep;assembly=ObjectSchemaEvolver.UnitTests", "SampleItem3");
+				}
+				else if (item.GetName() == "SampleItem2")
+				{
+					item.SetName("SampleItem");
+				}
+			}
+
+			SampleRoot data = Load(d);
+			AreEqual(2, data.Collection.Count);
+			AreEqual("Bob", data.Collection[0].FirstName);
+			IsInstanceOfType(data.Collection[0], typeof(SampleItem3));
+			IsInstanceOfType(data.Collection[1], typeof(SampleItem));
 		}
 
 		[TestMethod]

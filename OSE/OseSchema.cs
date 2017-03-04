@@ -24,6 +24,7 @@ namespace ObjectSchemaEvolver
 			}
 			return 0;
 		}
+
 	}
 
 	public class AttachedPropertyStore : IAttachedPropertyStore
