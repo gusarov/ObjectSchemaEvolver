@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>OSE</id>
-    <version>0.2.7</version>
+    <version>0.2.9</version>
     <title>Object Schema Evolver</title>
     <authors>Dmitry Gusarov</authors>
     <owners></owners>
@@ -24,6 +24,6 @@
     <!--
     <file src="bin\build\" target="build" />
 -->
-    <file src="bin\lib\" target="lib" />
+    <file src="bin\lib\" target="lib\net40" />
   </files>
 </package>

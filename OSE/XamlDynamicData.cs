@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -389,6 +390,11 @@ namespace ObjectSchemaEvolver
 			return base.Equals(obj);
 		}
 
+		public override int GetHashCode()
+		{
+			return 0;
+		}
+
 		public static bool operator ==(XamlDynamicData a, object b)
 		{
 			if (ReferenceEquals(null, a))
@@ -402,7 +408,26 @@ namespace ObjectSchemaEvolver
 		{
 			return !(a == b);
 		}
+		/*
+		public static dynamic Convert(XamlDynamicData source, Type dest)
+		{
+			if (dest == typeof(string))
+			{
+				return source.
+			}
+			return System.Convert.ChangeType(source, dest);
+		}
+		*/
 
+		public override string ToString()
+		{
+			return _element?.Value;
+		}
 
+		public string ToString(IFormatProvider formatProvider)
+		{
+			// since in XAML there is already invariant string - no reason to pass provider
+			return ToString();
+		}
 	}
 }

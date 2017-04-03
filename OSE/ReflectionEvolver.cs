@@ -1,29 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace ObjectSchemaEvolver
 {
 	public class ReflectionEvolver : IEvolver
 	{
+		public string VersionFieldName { get; set; } = "Version";
+
 		static readonly Regex _rx = new Regex(@"Upgrade_(?'from'\d+(_\d+)?)_to_(?'to'\d+(_\d+)?)", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 		//static Regex _rx = new Regex(@"Upgrade_(?'from'\d+)_to_(?'to'\d+)", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 		public byte[] UpgradeDatabase(byte[] database, Func<byte[], dynamic> dynamer/*, Func<dynamic, byte[]> store*/, Action<byte[]> intermediateDump = null)
 		{
 			var store = new Func<dynamic, byte[]>(d => d.StoreBack());
 			var state = dynamer(database);
+			var verGetter = new Func<dynamic, string>(s => s[VersionFieldName].ToString(CultureInfo.InvariantCulture)); //BuildDynamicGetter(state.GetType(), VersionFieldName);
+			var verSetter = new Action<dynamic, string>((s,v)=>s[VersionFieldName] = v); //BuildDynamicSetter(state.GetType(), VersionFieldName);
 
 			decimal version;
 
-			if (state.Version == null)
+			var verString = verGetter(state);
+			if (verString == null)
 			{
-				state.Version = version = 0m;
+				version = 0m;
+				verSetter(state, "0");
 			}
 			else
 			{
-				version = decimal.Parse(state.Version, CultureInfo.InvariantCulture);
+				version = decimal.Parse(verString, CultureInfo.InvariantCulture);
 			}
 
 			var methods = GetType().GetMethods();
@@ -61,7 +70,7 @@ namespace ObjectSchemaEvolver
 					throw new Exception($"There is no upgrade method for current schema version {version}");
 				}
 				level.MethodInfo.Invoke(this, new object[] { state });
-				state.Version = level.To;
+				verSetter(state, level.To.ToString(CultureInfo.InvariantCulture));
 				version = level.To;
 				if (intermediateDump != null)
 				{
@@ -75,6 +84,26 @@ namespace ObjectSchemaEvolver
 			}
 			return database; // unchanged
 		}
+
+		private static Func<object, object> BuildDynamicGetter(Type targetType, string propertyName)
+		{
+			var rootParam = Expression.Parameter(typeof(object));
+			var propBinder = Microsoft.CSharp.RuntimeBinder.Binder.GetMember(CSharpBinderFlags.None, propertyName, targetType, new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) });
+			DynamicExpression propGetExpression = Expression.Dynamic(propBinder, typeof(object),
+				Expression.Convert(rootParam, targetType));
+			Expression<Func<object, object>> getPropExpression = Expression.Lambda<Func<object, object>>(propGetExpression, rootParam);
+			return getPropExpression.Compile();
+		}
+		private static Action<object, object> BuildDynamicSetter(Type targetType, string propertyName)
+		{
+			var rootParam = Expression.Parameter(typeof(object));
+			var valueParam = Expression.Parameter(typeof(object));
+			var propBinder = Microsoft.CSharp.RuntimeBinder.Binder.SetMember(CSharpBinderFlags.None, propertyName, targetType, new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) });
+			DynamicExpression propSetExpression = Expression.Dynamic(propBinder, typeof(object), Expression.Convert(rootParam, targetType), Expression.Convert(valueParam, typeof(object)));
+			Expression<Action<object, object>> setPropExpression = Expression.Lambda<Action<object, object>>(propSetExpression, rootParam, valueParam);
+			return setPropExpression.Compile();
+		}
+
 		class LevelEvolver : IComparable<LevelEvolver>
 		{
 			public decimal From, To;
