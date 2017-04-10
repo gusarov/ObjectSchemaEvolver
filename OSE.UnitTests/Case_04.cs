@@ -9,15 +9,11 @@ namespace ObjectSchemaEvolver.UnitTests
 	[TestClass]
 	public class Case_04 : BaseXmlDynamicDataTests<Case4>
 	{
-		string _xaml = @"<Case4 xmlns='test' Version='555' />
-";
-
-
 		[TestMethod]
 		public void Should_use_another_field_for_version()
 		{
-			_xaml = new Case4Evolver().UpgradeDatabaseXaml(_xaml);
-			var d = Dynamic(_xaml);
+			var xaml = new Case4Evolver().UpgradeDatabaseXaml(@"<Case4 xmlns='test' Version='555' />");
+			var d = Dynamic(xaml);
 			Case4 case4 = Load(d);
 			Assert.AreEqual(555ul, case4.VersionStamp);
 			Assert.AreEqual(10m, case4.Ver);
@@ -26,8 +22,8 @@ namespace ObjectSchemaEvolver.UnitTests
 		[TestMethod]
 		public void Should_keep_ver_for_newer_schemas()
 		{
-			_xaml = new Case4Evolver().UpgradeDatabaseXaml(@"<Case4 xmlns='test' Ver='2000' />");
-			var d = Dynamic(_xaml);
+			var xaml = new Case4Evolver().UpgradeDatabaseXaml(@"<Case4 xmlns='test' Ver='2000' />");
+			var d = Dynamic(xaml);
 			Case4 case4 = Load(d);
 			Assert.AreEqual(2000m, case4.Ver);
 		}

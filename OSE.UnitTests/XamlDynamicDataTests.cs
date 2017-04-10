@@ -43,7 +43,7 @@ namespace ObjectSchemaEvolver.UnitTests
 		public SampleItem Composite { get; set; }
 	}
 
-	[TestClass]
+	//[TestClass]
 	public class BaseXmlDynamicDataTests<T>
 	{
 		public string StoreBack(dynamic d)

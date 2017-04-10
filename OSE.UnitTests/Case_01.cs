@@ -31,9 +31,17 @@ namespace ObjectSchemaEvolver.UnitTests
 			Assert.AreEqual(DateTime.UtcNow.Date, item.Items2[1].CreatedDate);
 		}
 
+		[TestMethod]
+		public void Should_evolve_from_zero()
+		{
+			var ev = new Case1Evolver();
+			_source = XamlServices.Save(ev.CreateRoot());
+			_source = ev.UpgradeDatabaseXaml(_source);
+			Trace.WriteLine(_source);
+		}
 	}
 
-	public class Case1Evolver : ReflectionEvolver
+	public class Case1Evolver : ReflectionEvolver<Case1>
 	{
 		public void Upgrade_1_to_5_rename_field(dynamic state)
 		{

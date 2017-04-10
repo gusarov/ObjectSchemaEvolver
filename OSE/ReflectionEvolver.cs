@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -9,6 +10,14 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace ObjectSchemaEvolver
 {
+	public class ReflectionEvolver<T> : ReflectionEvolver, IEvolver<T>
+	{
+		public virtual void InitNew(T newRoot)
+		{
+			
+		}
+	}
+
 	public class ReflectionEvolver : IEvolver
 	{
 		public string VersionFieldName { get; set; } = "Version";
@@ -35,29 +44,7 @@ namespace ObjectSchemaEvolver
 				version = decimal.Parse(verString, CultureInfo.InvariantCulture);
 			}
 
-			var methods = GetType().GetMethods();
-			var levels = new List<LevelEvolver>();
-			foreach (var item in methods)
-			{
-				var match = _rx.Match(item.Name);
-				if (match.Success)
-				{
-					levels.Add(new LevelEvolver(
-						decimal.Parse(match.Groups["from"].Value, CultureInfo.InvariantCulture)
-						, decimal.Parse(match.Groups["to"].Value, CultureInfo.InvariantCulture)
-						, item
-					));
-				}
-			}
-			levels.Sort();
-			//verify
-			for (int i = 1; i < levels.Count; i++)
-			{
-				if (levels[i].From != levels[i - 1].To)
-				{
-					throw new Exception($"Unexpected levels sequence: {levels[i - 1].From}=>{levels[i - 1].To} then {levels[i].From}=>{levels[i].To} ");
-				}
-			}
+			var levels = LoadLevels();
 			bool changed = false;
 			foreach (var level in levels)
 			{
@@ -83,6 +70,45 @@ namespace ObjectSchemaEvolver
 				return store(state);
 			}
 			return database; // unchanged
+		}
+
+		private List<LevelEvolver> _levels;
+
+		private List<LevelEvolver> LoadLevels()
+		{
+			if (_levels != null)
+			{
+				return _levels;
+			}
+			var methods = GetType().GetMethods();
+			var levels = new List<LevelEvolver>();
+			foreach (var item in methods)
+			{
+				var match = _rx.Match(item.Name);
+				if (match.Success)
+				{
+					levels.Add(new LevelEvolver(
+						decimal.Parse(match.Groups["from"].Value, CultureInfo.InvariantCulture)
+						, decimal.Parse(match.Groups["to"].Value, CultureInfo.InvariantCulture)
+						, item
+					));
+				}
+			}
+			levels.Sort();
+			//verify
+			for (int i = 1; i < levels.Count; i++)
+			{
+				if (levels[i].From != levels[i - 1].To)
+				{
+					throw new Exception($"Unexpected levels sequence: {levels[i - 1].From}=>{levels[i - 1].To} then {levels[i].From}=>{levels[i].To} ");
+				}
+			}
+			return _levels = levels;
+		}
+
+		public decimal LatestVersion
+		{
+			get { return LoadLevels().Last().To; }
 		}
 
 		private static Func<object, object> BuildDynamicGetter(Type targetType, string propertyName)
