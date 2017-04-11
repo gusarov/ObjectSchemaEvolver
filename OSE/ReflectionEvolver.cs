@@ -106,10 +106,7 @@ namespace ObjectSchemaEvolver
 			return _levels = levels;
 		}
 
-		public decimal LatestVersion
-		{
-			get { return LoadLevels().Last().To; }
-		}
+		public decimal LatestVersion => LoadLevels().LastOrDefault()?.To ?? 0;
 
 		private static Func<object, object> BuildDynamicGetter(Type targetType, string propertyName)
 		{
