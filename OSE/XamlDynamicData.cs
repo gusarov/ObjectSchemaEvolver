@@ -178,7 +178,7 @@ namespace ObjectSchemaEvolver
 		{
 			if (indexes.Length > 2)
 			{
-				throw new Exception("Only 1 and 2 index parameters supported");
+				throw new EvolverException("Only 1 and 2 index parameters supported");
 			}
 
 			var indexObj = indexes[0];
@@ -214,7 +214,7 @@ namespace ObjectSchemaEvolver
 		{
 			if (indexes.Length > 2)
 			{
-				throw new Exception("Only 1 and 2 index parameters supported");
+				throw new EvolverException("Only 1 and 2 index parameters supported");
 			}
 
 			var indexObj = indexes[0];

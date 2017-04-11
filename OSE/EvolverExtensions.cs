@@ -44,7 +44,7 @@ namespace ObjectSchemaEvolver
 				var versionPi = instance.GetType().GetProperty(re.VersionFieldName);
 				if (versionPi == null)
 				{
-					throw new Exception($"Root model type '{typeof(T)}' don't have a version property '{re.VersionFieldName}'");
+					throw new EvolverException($"Root model type '{typeof(T)}' don't have a version property '{re.VersionFieldName}'");
 				}
 				versionPi.SetValue(instance, re.LatestVersion, null);
 			}

@@ -28,17 +28,42 @@ namespace ObjectSchemaEvolver.UnitTests
 			Assert.AreEqual(2000m, case4.Ver);
 		}
 
+		[TestMethod]
+		public void Should_complain_on_non_initialized_ver()
+		{
+			var xaml = XamlServices.Save(new Case4());
+			Console.WriteLine(xaml);
+			var ex = Record(delegate
+			{
+				xaml = new Case4Evolver().UpgradeDatabaseXaml(xaml);
+			});
+			Assert.IsNotNull(ex);
+			Assert.IsInstanceOfType(ex, typeof(EvolverException));
+			StringAssert.Contains(ex.Message, "There is no upgrade method for current schema version -1");
+		}
+
+		[TestMethod]
+		public void Should_initialize_ver()
+		{
+			var ev = new Case4Evolver();
+			var xaml = XamlServices.Save(ev.CreateRoot());
+			var d = Dynamic(xaml);
+			Case4 case4 = Load(d);
+			Assert.AreEqual(10m, case4.Ver);
+			Assert.AreEqual(0UL, case4.VersionStamp);
+		}
+
 	}
 
 	public class Case4
 	{
 		public ulong VersionStamp { get; set; }
-		public ulong Ver { get; set; }
+		public decimal Ver { get; set; } = -1;
 
 	}
 
 
-	public class Case4Evolver : ReflectionEvolver
+	public class Case4Evolver : ReflectionEvolver<Case4>
 	{
 		public Case4Evolver()
 		{

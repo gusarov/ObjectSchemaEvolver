@@ -63,6 +63,19 @@ namespace ObjectSchemaEvolver.UnitTests
 		{
 			return new XamlDynamicData(xaml);
 		}
+
+		public Exception Record(Action act)
+		{
+			try
+			{
+				act();
+				return null;
+			}
+			catch (Exception ex)
+			{
+				return ex;
+			}
+		}
 	}
 
 	[TestClass]

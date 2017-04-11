@@ -54,7 +54,7 @@ namespace ObjectSchemaEvolver
 				}
 				if (level.From > version)
 				{
-					throw new Exception($"There is no upgrade method for current schema version {version}");
+					throw new EvolverException($"There is no upgrade method for current schema version {version}");
 				}
 				level.MethodInfo.Invoke(this, new object[] { state });
 				verSetter(state, level.To.ToString(CultureInfo.InvariantCulture));
@@ -100,7 +100,7 @@ namespace ObjectSchemaEvolver
 			{
 				if (levels[i].From != levels[i - 1].To)
 				{
-					throw new Exception($"Unexpected levels sequence: {levels[i - 1].From}=>{levels[i - 1].To} then {levels[i].From}=>{levels[i].To} ");
+					throw new EvolverException($"Unexpected levels sequence: {levels[i - 1].From}=>{levels[i - 1].To} then {levels[i].From}=>{levels[i].To} ");
 				}
 			}
 			return _levels = levels;
